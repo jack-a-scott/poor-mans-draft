@@ -1,7 +1,6 @@
 package main
 
 import (
-	"encoding/xml"
 	"errors"
 	"fmt"
 	"io/ioutil"
@@ -94,49 +93,26 @@ func main() {
 
 	// load doc xml
 
-	xmlFile, err := os.Open("base_docx/word/document.xml")
+	xmlFile, err := os.Open("templates/document.tmpl")
 	if err != nil {
 		panic("Cannot open document xml?!?")
 	}
 	defer xmlFile.Close()
 
-	byteValue, _ := ioutil.ReadAll(xmlFile)
-	fmt.Println(string(byteValue))
+	// oldDoc, _ := ioutil.ReadAll(xmlFile)
+	// newDoc := strings.Replace(string(oldDoc), "REPLACE", "<w:p w:rsidR=\"00D171E0\" w:rsidRDefault=\"00E81949\"><w:r><w:t>Exciting New Text</w:t></w:r></w:p>", 1)
 
-	type Body struct {
-		XMLName   xml.Name `xml:"w:body"`
-		Paragraph struct {
-			Run struct {
-				Text struct {
-					text string
-				} `xml:"w:t"`
-			} `xml:"w:r"`
-		} `xml:"w:p"`
-	}
+	f, _ := os.Create("base_docx/word/document.xml")
+	defer f.Close()
 
-	type Document struct {
-		XMLName xml.Name `xml:"w:document"`
-		Body    struct {
-			Paragraph []struct {
-				Run struct {
-					Text struct {
-						text string
-					} `xml:"w:t"`
-				} `xml:"w:r"`
-			} `xml:"w:p"`
-		} `xml:"w:body"`
-	}
-
-	var doc Document
-	xerr := xml.Unmarshal(byteValue, &doc)
-	fmt.Println(xerr)
-
-	fmt.Println(doc)
+	// var docContent []string
+	// // add the actual content
 	// for _, para := range docStructure {
 	// 	paraText, _ := ioutil.ReadFile("/documents/" + docChoice + "/" + para)
-	// 	run.AddText(string(paraText))
-	// 	run.AddBreak()
+	// 	docContent = append(docContent, "<w:p w:rsidR=\"00D171E0\" w:rsidRDefault=\"00E81949\"><w:r><w:t>"+string(paraText)+"</w:t></w:r></w:p>")
 	// }
+	// f.Write([]byte(docContent))
+	// zipDoc()
 
 }
 
